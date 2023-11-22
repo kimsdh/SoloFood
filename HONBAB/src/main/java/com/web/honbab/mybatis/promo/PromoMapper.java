@@ -37,6 +37,10 @@ public interface PromoMapper {
 	public List<PromoRepDTO> searchForComName(@Param("keyword") String keyword, @Param("s")  int start, @Param("e") int end);
 
 	public List<PromoRepDTO> searchForAddress(@Param("keyword") String keyword, @Param("s")  int start, @Param("e") int end);
+
+	public int isBizUser(String id);
+
+	public List<PromoRepDTO> promoAllList();
 	
 
 }

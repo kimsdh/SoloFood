@@ -1,8 +1,8 @@
 package com.web.honbab.member.service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -10,20 +10,24 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.web.honbab.member.dto.BizMemberDTO;
 import com.web.honbab.member.dto.MemberDTO;
-import com.web.honbab.member.service.MemberService;
 import com.web.honbab.mybatis.member.MemberMapper;
+import com.web.honbab.session.name.MemberSession;
 
 @Service
-public class MemberServiceImpl implements MemberService {
+public class MemberServiceImpl implements MemberService, MemberSession {
 	
 	@Autowired
 	private MemberMapper mapper;
+	
+	@Autowired
+	private HttpSession session;
 	
 	@Override
 	public int user_check(HttpServletRequest request) {
 		MemberDTO dto = mapper.user_check(request.getParameter("id"));
 		if(dto != null) {
 			if(request.getParameter("pw").equals(dto.getPw())) {
+				session.setAttribute(NICK, dto.getNickName());
 				return 0;
 			}
 		}
@@ -33,6 +37,7 @@ public class MemberServiceImpl implements MemberService {
 		BizMemberDTO dto = mapper.bizuser_check(request.getParameter("id"));
 		if(dto != null) {
 			if(request.getParameter("pw").equals(dto.getPw())) {
+				session.setAttribute(NICK, dto.getComName());
 				return 0;
 			}
 		}
@@ -84,7 +89,8 @@ public class MemberServiceImpl implements MemberService {
 
 
 	@Override
-	public String modify(MultipartHttpServletRequest mul, HttpServletRequest request) {
+	public String modifySave(MultipartHttpServletRequest mul, HttpServletRequest request) {
+		
 		MemberDTO dto = new MemberDTO();
 		dto.setEmail(mul.getParameter("email"));
 		dto.setGender(mul.getParameter("gender"));
@@ -97,23 +103,22 @@ public class MemberServiceImpl implements MemberService {
 		
 		int result = 0;
 		try {
-			result = mapper.modify(dto);
+			result = mapper.modifySave(dto);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		String msg,url;
 		if(result == 1) {
-			msg = "수 정";
+			msg = "회원정보를 수정하였습니다.";
 			url = "/member/info?id="+dto.getId();
 		} else {
-			msg ="문제가 생겼습니다";
+			msg ="회원정보 수정에 실패하였습니다. 다시 시도해주세요.";
 			url = "/member/modifyForm?id="+dto.getId();
 		}
 		return getMessage(request,msg,url);
-		
 	}
 
 
-
+	
 }

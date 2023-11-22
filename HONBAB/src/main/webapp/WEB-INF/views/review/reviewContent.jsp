@@ -62,10 +62,11 @@
 					let writeDate = date.getFullYear()+"년" +
 									(date.getMonth()+1)+"월" +
 									date.getDate()+"일"
-					html += "<hr><div align='left'><b>아이디 : </b>" + redata.reNick + "님/";
-					html += "<b>작성일</b> : " + writeDate + "<br>" 
-					html += "<b>내용</b> : " + redata.reComent + "</div>"
-					html += "<input type= button value=댓글삭제  onclick=del(${reviewContent.writeNo})>";
+					html += "<div class='re_wrap'><div id='re' align='left'><b>by. </b>" + redata.reNick + "님 / ";
+					html += writeDate + "<br>" 
+					html += redata.reComent + "</div>"
+					html += "<a id='re_del' onclick=del(${reviewContent.writeNo})>댓글 삭제</a></div>";
+				/* 	html += "<input type= button value='댓글삭제' id='re_del' onclick=del(${reviewContent.writeNo})></div>"; */
 				})
 				$("#reply").html(html)
 			}, error:function(){
@@ -123,25 +124,30 @@
 		<div class="line"></div>
 
 		<div class="writer_wrap">
-			<span class="writer">by. ${reviewContent.nickname}</span> 
-			<span class="date">${reviewContent.writeDate}</span> 
-			<span class="view">${reviewContent.views}</span>
+			<span class="writer">by. ${reviewContent.nickname}</span> <span
+				class="date">${reviewContent.writeDate}</span> <span class="view">${reviewContent.views}</span>
 
 			<div class="like">
-				<a href="#"
-					onclick="isLogin(${reviewContent.writeNo})">
-					<img id="heart" src="${contextPath}/resources/img/heart.svg"></a>
-					<span class="age">${reviewContent.likes}</span>
+				<a href="#" onclick="isLogin(${reviewContent.writeNo})">
+				<c:if test="${likeIt == 'yes'}">
+				<img id="heart" src="${contextPath}/resources/img/heart-fill.svg"></c:if>
+				<c:if test="${likeIt == 'no'}">
+				<img id="heart" src="${contextPath}/resources/img/heart.svg"></c:if>				
+				</a>
+				<span class="age">${reviewContent.likes}</span>
+					
 			</div>
-	
+
 			<c:if test="${reviewContent.imgName == 'None'}">
 				<div id="imgx">
 					<span>Θ</span>
 				</div>
 			</c:if>
-	
+
 			<c:if test="${reviewContent.imgName != 'None'}">
-				<img src="${contextPath }/review/download?imageFileName=${reviewContent.imgName}" width="400px" style="float: right" />
+				<img
+					src="${contextPath }/review/download?imageFileName=${reviewContent.imgName}"
+					width="400px" style="float: right" />
 			</c:if>
 		</div>
 
@@ -152,59 +158,44 @@
 		</div>
 
 		<!-- buttons -->
-		<input type="button" value="글목록" onclick="location.href='${contextPath}/review/reviewAllList'">
-		<c:if test="${loginUser == reviewContent.id}">
+		<input type="button" value="글목록"
+			onclick="location.href='${contextPath}/review/reviewAllList'">
+		<c:if test="${loginUser == reviewContent.id || loginUser == 'admin'}">
 			<!-- 로그인되어있고 , reviewContent.uNickname 과 일치하면 노출-->
-			<input type="button" value="글수정" id="modify_btn" onclick="location.href='${contextPath}/review/review_modify_form?writeNo=${reviewContent.writeNo}'"> 
-			<input type="button" value="글삭제" id="delete_btn" onclick="location.href='${contextPath}/review/review_delete?writeNo=${reviewContent.writeNo}&imageFileName=${reviewContent.imgName}'">
+			<input type="button" value="글수정" id="modify_btn"
+				onclick="location.href='${contextPath}/review/review_modify_form?writeNo=${reviewContent.writeNo}'">
+			<input type="button" value="글삭제" id="delete_btn"
+				onclick="location.href='${contextPath}/review/review_delete?writeNo=${reviewContent.writeNo}&imageFileName=${reviewContent.imgName}'">
 		</c:if>
 	</main>
-	
-    <section>
-    <div class="plus"><a>+ 댓글</a></div>
+
+	<section>
+		<div class="plus">
+			<a>+ 댓글</a>
+		</div>
 		<c:if test="${loginUser != null}">
-      <div class="panel">
-				<form id="form" name="form">        
-	       	<input type="hidden" name="writeNo" value="${reviewContent.writeNo}">
-	       	<input type="hidden" name="id" value="${reviewContent.id}">
-	        <div class="rep">
-	          <span>by. ${reviewContent.nickname}</span>
-	          <span>savedate</span><br>
-		     		<input type="text" id="coment" name="coment" placeholder="10글자 이상 작성" />
-   					<button type="button" onclick="rep()">
-		     			<img id="enter" src="${contextPath}/resources/img/arrow-return-left.svg">
-		     		</button>
-	        </div>
-	        <div class="rep">
-     				<span>by. ${reviewContent.nickname}</span>
-	          <span>savedate</span><br>
-		     		<input type="text" id="coment" name="coment" placeholder="10글자 이상 작성" />
-   					<button type="button" onclick="rep()">
-		     			<img id="enter" src="${contextPath}/resources/img/arrow-return-left.svg">
-		     		</button>
-	        </div>
-	        <div class="rep">
-    				<span>by. ${reviewContent.nickname}</span>
-	          <span>savedate</span><br>
-		     		<input type="text" id="coment" name="coment" placeholder="10글자 이상 작성" />
-   					<button type="button" onclick="rep()">
-		     			<img id="enter" src="${contextPath}/resources/img/arrow-return-left.svg">
-		     		</button>
-	        </div>
-	        <div class="rep">
-     				<span>by. ${reviewContent.nickname}</span>
-	          <span>savedate</span><br>
-		     		<input type="text" id="coment" name="coment" placeholder="10글자 이상 작성" />
-   					<button type="button" onclick="rep()">
-		     			<img id="enter" src="${contextPath}/resources/img/arrow-return-left.svg">
-		     		</button>
-	        </div>
+			<div class="panel">
+				<form id="form" name="form">
+					<input type="hidden" name="writeNo"	value="${reviewContent.writeNo}">
+					<div class="rep">
+						<span>by. ${reviewContent.nickname}</span> <span>savedate</span><br>
+						<input type="text" id="coment" name="coment"placeholder="10글자 이상 작성" />
+						<button type="button" onclick="rep()">
+							<img id="enter"
+								src="${contextPath}/resources/img/arrow-return-left.svg">
+						</button>
+					</div>
+					<div class="rep">
+						<div id="reply">
+							<!-- 해당글에 답변이 있으면 노출 -->
+						</div>
+					</div>
 				</form>
 			</div>
-		</c:if> 
-    </section>
-    
-    
+		</c:if>
+	</section>
+
+
 	<%-- <!-- reply -->
 	<h2>답글페이지</h2>
 
@@ -227,8 +218,8 @@
 	</c:if>
  --%>
 	<c:import url="../main/footer.jsp" />
-	
-	    <script>
+
+	<script>
       var plus = document.getElementsByClassName("plus");
       var i;
 

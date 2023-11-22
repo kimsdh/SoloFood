@@ -13,6 +13,8 @@ public interface PromoService {
 
 	void promoList(Model model, int num);
 
+	public void promoAllList(Model model);
+	
 	String writeSave(MultipartHttpServletRequest mul, HttpServletRequest request);
 
 	void contentView(int writeNo, Model model);
@@ -26,5 +28,7 @@ public interface PromoService {
 	List<PromoRepDTO> getRepList(int write_group);
 
 	public void getSearch(Model model, int num);
+
+	int isBizUser(String user);
 
 }

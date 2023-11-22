@@ -102,12 +102,6 @@ public class ChallengeController implements MemberSession {
 		return "challenge/challengePop";
 	}
 	
-	@RequestMapping(value= "challengeBestList")
-	public String challengeBestList(@RequestParam int views, Model model) {
-		cs.challengeBestList(views, model);
-		
-		return "challenge/challengeBestList";
-	}
 
 	/*
 	@PostMapping(value = "challengeSearch") 
@@ -121,8 +115,8 @@ public class ChallengeController implements MemberSession {
 	*/
 	
 	@RequestMapping(value= "challengeSearch")
-	public String challengeSearch(MultipartHttpServletRequest mul, Model model) {
-		cs.challengeSearch(mul, model);
+	public String challengeSearch(MultipartHttpServletRequest mul, Model model,  @RequestParam(value="num", required=false, defaultValue="1")int num) {
+		cs.challengeSearch(mul, model, num);
 		
 		return "challenge/challengeAllList";
 	}

@@ -1,13 +1,5 @@
-function id_check() {
-  window.open("idcheck", "", "width=600, height=200, left=200, top=100");
-//  window.open("", "", "width=600, height=200, left=200, top=100");
-};
-
-
 function joinform_check() {
-  var id = document.getElementById("id");
   var pw = document.getElementById("pw");
-  var repw = document.getElementById("repw");
   var name = document.getElementById("name");
   var nickName = document.getElementById("nickName");
   var tel = document.getElementById("tel");
@@ -23,25 +15,13 @@ function joinform_check() {
   var ucityCheck = city.options[city.selectedIndex].value;
   var ugenderCheck = gender.options[gender.selectedIndex].value;
   
-  if (id.value == "") {
-    alert("아이디를 입력하세요.");
-    id.focus();
-    return false;
-  } else if (!uidCheck.test(id.value)) {
-    alert("아이디는 특수문자를 사용할 수 업습니다.");
-    id.focus();
-    return false;
-  } else if (pw.value == "") {
+  if (pw.value == "") {
     alert("비밀번호를 입력하세요.");
     pw.focus();
     return false;
-  }  else if (!upwCheck.test(pw.value)) {
+  } else if (!upwCheck.test(pw.value)) {
     alert("최소 8자리 이상, 영어 대소문자, 숫자, 특수문자 포함해주세요");
     id.focus();
-    return false;
-  } else if (repw.value !== pw.value) {
-    alert("비밀번호가 일치하지 않습니다.");
-    repw.focus();
     return false;
   } else if (name.value == "") {
     alert("이름을 입력하세요.");
@@ -75,5 +55,5 @@ function joinform_check() {
 	};
 
   //입력 값 전송
-  document.getElementById('register_form').submit(); //유효성 검사의 포인트   
+  document.getElementById('modify').submit(); //유효성 검사의 포인트   
 };

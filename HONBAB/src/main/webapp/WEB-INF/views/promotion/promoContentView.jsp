@@ -1,16 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <c:set var="contextPath" value="${pageContext.request.contextPath }" />
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>promotion/contentView.jsp</title>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+<link
+	href="${pageContext.request.contextPath}/resources/css/promo/view.css?ver=4"
+	rel="stylesheet" />
+
+<!-- font -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito+Sans:wght@400;600;700&display=swap"
+	rel="stylesheet" />
 <script type="text/javascript">
  	
- 	function slide_click() {
+ 	/* function slide_click() {
 		$("#first").slideDown("slow");
 		$("#modal_wrap").show();
 	}
@@ -18,10 +30,10 @@
  	function slide_hide() {
 		$("#first").slideUp("fast");
 		$("#modal_wrap").hide();
-	}
+	} */
  	
  	//Ajax??
- 	function rep() {
+ 	/* function rep() {
 		let form = {};
 		let arr = $("#frm").serializeArray(); //해당데이터 직렬화 처리 //[{name: "", value:""}, {name: "", value:""}]
 		for(i=0; i<arr.length; i++){
@@ -35,7 +47,7 @@
 			contentType: "application/json; charset=utf-8",
 			success: function(){
 				alert("답글이 추가되었습니다..");
-				slide_hide();
+				/* slide_hide(); */
 				reply_data();
 			}, error:function(){
 				alert("문제 발생");
@@ -73,84 +85,71 @@
 			}
 		})
 		
-		}
+		} */
 </script>
-<style type="text/css">
-.login {
-	text-align: center;
-	height: 300px;
-}
 
-#modal_wrap {
-	display: none;
-	position: fixed;
-	z-index: 9;
-	margin: 0 auto;
-	top: 0;
-	left: 0;
-	right: 0;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, 0.4);
-}
-
-#first {
-	display: none;
-	position: fixed;
-	z-index: 10;
-	margin: 0 auto;
-	top: 30px;
-	left: 0;
-	right: 0;
-	width: 300px;
-	height: 350px;
-	background-color: rgba(212, 244, 250, 0.9);
-}
-
-.view_title {
-	text_align: center;
-}
-
-#star fieldset{
-    display: inline-block;
-    direction: rtl;
-    border:0;
-}
-#star fieldset legend{
-    text-align: right;
-}
-#star input[type=radio]{
-    display: none;
-}
-#star label{
-    font-size: 3em;
-    color: transparent;
-    text-shadow: 0 0 0 #f0f0f0;
-}
-#star label:hover{
-    text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
-}
-#star label:hover ~ label{
-    text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
-}
-#star input[type=radio]:checked ~ label{
-    text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
-}
-#reviewContents {
-    width: 100%;
-    height: 150px;
-    padding: 10px;
-    box-sizing: border-box;
-    border: solid 1.5px #D3D3D3;
-    border-radius: 5px;
-    font-size: 16px;
-    resize: none;
-}
-</style>
 </head>
 <body onload="reply_data()">
 
- 	<form class="rating" name="star" id="star" method="post">
+<!-- header -->
+	<c:import url="../main/header.jsp" />
+
+
+	<main>
+		<div class="title_wrap">
+			<div class="level">
+				<span>${data.writeNo }.</span>
+			</div>
+			<div class="title">
+				<div id="t">${data.title}</div>
+			</div>
+		</div>
+
+		<div class="line"></div>
+
+		<div class="writer_wrap">
+			<span class="writer">by. ${data.id }</span> 
+			<%-- <span class="date">${data.saveDate }</span>  --%>
+
+		<%-- 	<div class="like">
+				<a href="#" onclick="isLogin(${reviewContent.writeNo})"> <img
+					id="heart" src="${contextPath}/resources/img/heart.svg"></a> <span
+					class="age">${reviewContent.likes}</span>
+			</div> --%>
+
+			<c:if test="${data.imageFileName == 'Nan'}">
+				<div id="imgx">
+					<span>Θ</span>
+				</div>
+			</c:if>
+
+			<c:if test="${data.imageFileName != 'Nan'}">
+				<img
+					src="${contextPath }/promotion/download?imageFileName=${data.imageFileName}"
+					width="400px" style="float: right" />
+			</c:if>
+		</div>
+
+		<div class="empty"></div>
+
+		<div class="content_wrap">
+			<div class="text">${data.content }</div>
+		</div>
+
+		<!-- buttons -->
+		<input type="button" value="글목록"
+			onclick="location.href='${contextPath}/promotion/promoAllList'">
+		<c:if test="${data.id == loginUser || loginUser == 'admin'}">
+			<!-- 로그인되어있고 , reviewContent.uNickname 과 일치하면 노출-->
+			<input type="button" value="글수정" id="modify_btn"
+				onclick="location.href='${contextPath}/promotion/promoModifyForm?writeNo=${data.writeNo }'">
+			<input type="button" value="글삭제" id="delete_btn"
+				onclick="location.href='${contextPath}/promotion/delete?writeNo=${data.writeNo }&imageFileName=${data.imageFileName }'">
+		</c:if>
+	</main>
+
+
+ 	<!-- <form class="rating" name="star" id="star" method="post">
 	<fieldset>
 		<span class="text-bold">평균 평점</span>
 		<input type="radio" name="reviewStar" value="5" id="rate1"><label
@@ -168,8 +167,8 @@
 		<textarea class="col-auto form-control" type="text" id="reviewContents"
 				  placeholder="당사 파트너 업체들에 대한 여러분의 소중한 평가는 저희 서비스 향상에 큰 도움이 됩니다"></textarea>
 	</div>
-</form>	
-
+</form>	 -->
+<%-- 
 	<div id="modal_wrap">
 		<div id="first">
 			<div style="width: auto; margin: 0 auto; padding-top: 20px;">
@@ -185,7 +184,7 @@
 					<b>내용</b>					
 					<textarea id="content" name="content" rows="5" cols="30"></textarea>
 					<hr>
-					<b>평점</b> <input type="number" id="star" name="star" value="${data.star }" --%>>
+					<b>평점</b> <input type="number" id="star" name="star" value="${data.star }" >
 					<hr>  						
 					<button type="button" onclick="rep()">답글</button>
 					&nbsp;
@@ -195,13 +194,18 @@
 			</div>
 		</div>
 	</div>
-
-
+	<br>
+	<br>
+	<br>
+	<br>
 	<h1 class="view_title" align="center">파트너 홍보</h1>
 	<div class="content_view" align="center">
-		<table border="1">
-			<tr>
-				<th width="100px">글번호</th>
+	 --%>
+	
+	
+		<!-- <table border="1"> -->
+<%-- 			<tr>
+				<th width="200px">글번호</th>
 				<td width="200px">${data.writeNo }</td>
 				<th width="100px">작성자</th>
 				<td width="200px">${data.id }</td>
@@ -237,8 +241,55 @@
 				</td>
 			</tr>
 		</table>
-	</div>
+	</div> --%>
 
+	<%-- <section>
+		<div class="plus">
+			<a>+ 댓글</a>
+		</div>
+		<c:if test="${loginUser != null}">
+			<div class="panel">
+				<form id="frm" name="frm">
+					<input type="hidden" name="writeNo"	value="${data.writeNo}">
+					<div class="rep">
+						<span>by. ${data.id }</span> <span>savedate</span><br>
+						<input type="text" id="coment" name="coment"placeholder="10글자 이상 작성" />
+						<button type="button" onclick="rep()">
+							<img id="enter"
+								src="${contextPath}/resources/img/arrow-return-left.svg">
+						</button>
+					</div>
+					<div class="rep">
+						<div id="reply">
+							<!-- 해당글에 답변이 있으면 노출 -->
+						</div>
+					</div>
+				</form>
+			</div>
+		</c:if>
+	</section> --%>
+
+
+
+<!-- footer -->
+	<c:import url="../main/footer.jsp" />
+	
+	<script>
+      var plus = document.getElementsByClassName("plus");
+      var i;
+
+      for (i = 0; i < plus.length; i++) {
+        plus[i].addEventListener("click", function () {
+          this.classList.toggle("active");
+          var panel = this.nextElementSibling;
+          if (panel.style.maxHeight) {
+            panel.style.maxHeight = null;
+          } else {
+            panel.style.maxHeight = panel.scrollHeight + "px";
+          }
+        });
+      }
+    </script>
 
 
 </body>
